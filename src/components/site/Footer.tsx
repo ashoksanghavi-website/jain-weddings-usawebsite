@@ -197,25 +197,28 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="container-site relative flex flex-col gap-4 border-t border-gold2/20 py-8 font-util text-[11.5px] uppercase tracking-[0.14em] text-paper/50 md:flex-row md:items-center md:justify-between">
-          <p>{site.copyright}</p>
-          <p className="flex items-center gap-3">
-            <span aria-hidden className="block h-1.5 w-1.5 rotate-45 bg-gold2" />
-            {site.signatory}
-          </p>
-        </div>
+        <div className="container-site relative border-t border-gold2/20 py-8 font-util text-[11.5px] uppercase tracking-[0.14em] text-paper/50">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <p>{site.copyright}</p>
+            <p className="flex items-center gap-3">
+              <span aria-hidden className="block h-1.5 w-1.5 rotate-45 bg-gold2" />
+              {site.signatory}
+            </p>
+          </div>
 
-        <div className="container-site relative border-t border-gold2/10 py-4 text-center font-util text-[10.5px] uppercase tracking-[0.16em] text-paper/40">
-          Designed by{" "}
-          <a
-            href="https://www.automatedcodes.com"
-            target="_blank"
-            rel="noreferrer"
-            className="text-gold2/80 underline-offset-4 transition-colors hover:text-gold2 hover:underline"
-          >
-            Automated Codes
-            <span className="sr-only">, opens in a new window</span>
-          </a>
+          <p className="mt-7 text-center text-[10.5px] tracking-[0.18em] text-paper/40">
+            <span aria-hidden className="mx-auto mb-4 block h-px w-10 bg-gold2/25" />
+            Designed by{" "}
+            <a
+              href="https://www.automatedcodes.com"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-gold2/85 underline-offset-4 transition-colors hover:text-gold2 hover:underline"
+            >
+              Automated Codes
+              <span className="sr-only">, opens in a new window</span>
+            </a>
+          </p>
         </div>
       </footer>
     </>
