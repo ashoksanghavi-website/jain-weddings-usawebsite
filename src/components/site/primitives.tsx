@@ -22,6 +22,7 @@ export function Reveal({
   as?: "div" | "section" | "li" | "article";
 }) {
   const reduce = useReducedMotion();
+  const { ref, shown } = useReveal<HTMLDivElement>();
   if (reduce) {
     const Tag = As;
     return <Tag className={className}>{children}</Tag>;
@@ -29,10 +30,10 @@ export function Reveal({
   const MotionTag = motion[As];
   return (
     <MotionTag
+      ref={ref as never}
       className={className}
       initial={{ opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-8% 0px" }}
+      animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
       transition={{ duration: 0.7, delay, ease: EASE }}
     >
       {children}
