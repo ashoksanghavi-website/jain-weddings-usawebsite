@@ -1,12 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
-import type { ReactNode, HTMLAttributes } from "react";
+import type { ReactNode, HTMLAttributes, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-import { useReveal } from "@/hooks/use-reveal";
-
-const MotionLink = motion.create(Link);
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* ---------------- Reveal ---------------- */
 
@@ -21,23 +16,14 @@ export function Reveal({
   className?: string;
   as?: "div" | "section" | "li" | "article";
 }) {
-  const reduce = useReducedMotion();
-  const { ref, shown } = useReveal<HTMLDivElement>();
-  if (reduce) {
-    const Tag = As;
-    return <Tag className={className}>{children}</Tag>;
-  }
-  const MotionTag = motion[As];
+  const Tag = As;
   return (
-    <MotionTag
-      ref={ref as never}
-      className={className}
-      initial={{ opacity: 0, y: 26 }}
-      animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
-      transition={{ duration: 0.7, delay, ease: EASE }}
+    <Tag
+      className={cn("jw-rv", className)}
+      style={delay ? ({ "--d": `${delay}s` } as CSSProperties) : undefined}
     >
       {children}
-    </MotionTag>
+    </Tag>
   );
 }
 
@@ -54,25 +40,18 @@ export function SplitHeading({
   className?: string;
   italicFrom?: string;
 }) {
-  const { ref, shown } = useReveal<HTMLHeadingElement>();
   const Tag = (level === 1 ? "h1" : "h2") as "h1" | "h2";
   const words = text.split(" ");
   const italicIndex = italicFrom ? words.indexOf(italicFrom.split(" ")[0] ?? "") : -1;
 
   return (
-    <Tag ref={ref} aria-label={text} className={className}>
+    <Tag aria-label={text} className={className}>
       {words.map((word, i) => (
         <span key={`${word}-${i}`} className="inline-block overflow-hidden align-bottom">
           <span
             aria-hidden
-            className={cn(
-              "inline-block",
-              italicIndex >= 0 && i >= italicIndex ? "italic" : undefined,
-            )}
-            style={{
-              transform: shown ? "translateY(0)" : "translateY(105%)",
-              transition: `transform 0.8s cubic-bezier(0.22,1,0.36,1) ${i * 0.055}s`,
-            }}
+            className={cn("jw-word", italicIndex >= 0 && i >= italicIndex ? "italic" : undefined)}
+            style={{ "--d": `${i * 0.055}s` } as CSSProperties}
           >
             {word}
             {i < words.length - 1 ? "\u00A0" : ""}
@@ -116,20 +95,14 @@ export function GoldRule({
   className?: string;
   tone?: "gold" | "gold2";
 }) {
-  const { ref, shown } = useReveal<HTMLSpanElement>();
   return (
     <span
-      ref={ref}
       aria-hidden
       className={cn(
-        "block h-px w-full origin-left",
+        "jw-gr block h-px w-full",
         tone === "gold" ? "bg-gold/60" : "bg-gold2/50",
         className,
       )}
-      style={{
-        transform: shown ? "scaleX(1)" : "scaleX(0)",
-        transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
-      }}
     />
   );
 }
@@ -203,9 +176,7 @@ export function StampFrame({
 /* ---------------- Buttons ---------------- */
 
 const btnBase =
-  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 font-util text-[11.5px] font-semibold uppercase tracking-[0.16em] transition-[background-color,color] duration-[250ms]";
-
-const SPRING = { type: "spring" as const, stiffness: 420, damping: 18 };
+  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 font-util text-[11.5px] font-semibold uppercase tracking-[0.16em] transition-[background-color,transform,color] duration-[200ms] hover:-translate-y-0.5 active:scale-[0.97] motion-reduce:transform-none motion-reduce:transition-none";
 
 export function Button({
   children,
@@ -226,7 +197,6 @@ export function Button({
   disabled?: boolean;
   onClick?: () => void;
 }) {
-  const reduce = useReducedMotion();
   const styles = cn(
     btnBase,
     variant === "primary" && "bg-kumkum text-paper hover:bg-[#8f2019]",
@@ -235,35 +205,25 @@ export function Button({
     disabled && "pointer-events-none opacity-60",
     className,
   );
-  const anim =
-    reduce || disabled
-      ? {}
-      : { whileHover: { y: -2, scale: 1.03 }, whileTap: { scale: 0.96 }, transition: SPRING };
 
   if (to) {
     return (
-      <MotionLink to={to} className={styles} {...anim}>
+      <Link to={to} className={styles}>
         {children}
-      </MotionLink>
+      </Link>
     );
   }
   if (href) {
     return (
-      <motion.a href={href} className={styles} {...anim}>
+      <a href={href} className={styles}>
         {children}
-      </motion.a>
+      </a>
     );
   }
   return (
-    <motion.button
-      type={type ?? "button"}
-      className={styles}
-      disabled={disabled}
-      onClick={onClick}
-      {...anim}
-    >
+    <button type={type ?? "button"} className={styles} disabled={disabled} onClick={onClick}>
       {children}
-    </motion.button>
+    </button>
   );
 }
 
@@ -278,21 +238,13 @@ export function ArrowLink({
   tone?: "ink" | "paper";
   className?: string;
 }) {
-  const reduce = useReducedMotion();
-  const anim = reduce
-    ? {}
-    : { whileHover: { x: 4 }, whileTap: { scale: 0.98 }, transition: SPRING };
   return (
-    <MotionLink
-      to={to}
-      className={cn("jw-arrow group", tone === "paper" && "jw-arrow-paper", className)}
-      {...anim}
-    >
+    <Link to={to} className={cn("jw-arrow group", tone === "paper" && "jw-arrow-paper", className)}>
       <span className="jw-arrow-label">{children}</span>
       <span aria-hidden className="jw-arrow-disc">
         <ArrowRight className="h-[13px] w-[13px]" aria-hidden />
       </span>
-    </MotionLink>
+    </Link>
   );
 }
 
@@ -317,9 +269,8 @@ export function InlayImage({
   imgClassName?: string;
   eager?: boolean;
 }) {
-  const { ref, shown } = useReveal<HTMLDivElement>();
   return (
-    <div ref={ref} className={cn("plate relative overflow-hidden bg-gold/70 p-[1.5px]", className)}>
+    <div className={cn("plate relative overflow-hidden bg-gold/70 p-[1.5px]", className)}>
       <img
         src={src}
         alt={alt}
@@ -331,16 +282,7 @@ export function InlayImage({
         className={cn("plate h-full w-full object-cover", imgClassName)}
       />
 
-      {curtain ? (
-        <span
-          aria-hidden
-          className="absolute inset-0 bg-kumkum"
-          style={{
-            transform: shown ? "translateX(101%)" : "translateX(0)",
-            transition: "transform 0.9s cubic-bezier(0.22,1,0.36,1)",
-          }}
-        />
-      ) : null}
+      {curtain ? <span aria-hidden className="jw-ct absolute inset-0 bg-kumkum" /> : null}
     </div>
   );
 }

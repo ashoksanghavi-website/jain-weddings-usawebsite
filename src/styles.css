@@ -2437,3 +2437,25 @@ a.jw-contact-row:hover {
 .jw-adm-panel {
   min-width: 0;
 }
+
+/* ---------- entrance animations: pure CSS, fail-visible ----------
+   These play on their own on mount (no JS, no IntersectionObserver), and always
+   settle on the VISIBLE end state. If the JS bundle is slow or never runs (real
+   iOS Safari under load), content and images still appear. */
+
+@keyframes jw-rv   { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes jw-ct   { from { transform: translateX(0); }               to { transform: translateX(101%); } }
+@keyframes jw-gr   { from { transform: scaleX(0); }                   to { transform: scaleX(1); } }
+@keyframes jw-word { from { transform: translateY(105%); }            to { transform: translateY(0); } }
+@keyframes jw-page { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+.jw-rv   { animation: jw-rv 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--d, 0s); }
+.jw-ct   { animation: jw-ct 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.jw-gr   { transform-origin: left; animation: jw-gr 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.jw-word { display: inline-block; animation: jw-word 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--d, 0s); }
+.jw-page { animation: jw-page 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .jw-rv, .jw-gr, .jw-word, .jw-page { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .jw-ct { animation: none !important; transform: translateX(101%); }
+}

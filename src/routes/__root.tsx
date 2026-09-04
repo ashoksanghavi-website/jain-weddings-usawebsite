@@ -9,7 +9,6 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -119,7 +118,6 @@ function RootComponent() {
   const { content } = Route.useLoaderData();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
-  const reduce = useReducedMotion();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -147,19 +145,12 @@ function RootComponent() {
         </a>
         <Header />
         <main id="main" className="pt-[74px] min-[520px]:pt-[112px]">
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          {reduce ? (
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes.
+              The page-enter animation is pure CSS (jw-page), so content is never
+              hidden waiting on JS. */}
+          <div key={pathname} className="jw-page">
             <Outlet />
-          ) : (
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Outlet />
-            </motion.div>
-          )}
+          </div>
         </main>
         <Footer />
         <BackToTop />
