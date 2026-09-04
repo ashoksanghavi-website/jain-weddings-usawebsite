@@ -269,6 +269,10 @@ export function InlayImage({
   imgClassName?: string;
   eager?: boolean;
 }) {
+  // The image is shown directly — no reveal "curtain" overlay. On real iOS
+  // Safari a CSS-animated curtain could stick in its covering state and leave a
+  // solid maroon block over the photograph, so it is gone entirely.
+  void curtain;
   return (
     <div className={cn("plate relative overflow-hidden bg-gold/70 p-[1.5px]", className)}>
       <img
@@ -281,8 +285,6 @@ export function InlayImage({
         {...(eager ? { fetchPriority: "high" as const } : {})}
         className={cn("plate h-full w-full object-cover", imgClassName)}
       />
-
-      {curtain ? <span aria-hidden className="jw-ct absolute inset-0 bg-kumkum" /> : null}
     </div>
   );
 }

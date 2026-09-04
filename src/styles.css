@@ -2459,3 +2459,15 @@ a.jw-contact-row:hover {
   .jw-rv, .jw-gr, .jw-word, .jw-page { animation: none !important; opacity: 1 !important; transform: none !important; }
   .jw-ct { animation: none !important; transform: translateX(101%); }
 }
+
+/* ---------- touch devices: no sticky :hover ----------
+   On a touch screen the :hover state sticks after a tap or a scroll-over. The
+   ceremony CTA fills with kumkum on hover, so a stuck hover turned the button
+   into a solid red block with its label hidden. Force the resting state where
+   there is no real hover pointer. */
+@media (hover: none) {
+  .jw-cer-cta::before { transform: scaleX(0) !important; }
+  .jw-cer-cta-label { color: var(--color-kumkum) !important; }
+  .jw-cer-cta { transform: none !important; box-shadow: none !important; }
+  .jw-cer-cta-edge { border-color: color-mix(in oklab, var(--color-gold) 50%, transparent) !important; }
+}
