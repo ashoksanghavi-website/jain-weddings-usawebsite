@@ -2471,3 +2471,48 @@ a.jw-contact-row:hover {
   .jw-cer-cta { transform: none !important; box-shadow: none !important; }
   .jw-cer-cta-edge { border-color: color-mix(in oklab, var(--color-gold) 50%, transparent) !important; }
 }
+
+/* ---------- native scroll-snap photo reel (iOS-reliable gallery) ---------- */
+.jw-reel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-block: 22px;
+  padding-inline: max(16px, calc((100% - min(74vw, 300px)) / 2));
+  scrollbar-width: none;
+  outline: none;
+}
+.jw-reel::-webkit-scrollbar {
+  display: none;
+}
+.jw-reel-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(74vw, 300px);
+  scroll-snap-align: center;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+}
+.jw-reel-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 5px solid var(--color-card);
+  box-shadow: 0 16px 36px color-mix(in oklab, var(--color-maroon) 22%, transparent);
+  transition: transform 0.3s ease;
+}
+.jw-reel-item:active .jw-reel-img {
+  transform: scale(0.985);
+}
+@media (prefers-reduced-motion: reduce) {
+  .jw-reel {
+    scroll-behavior: auto;
+  }
+}

@@ -10,7 +10,7 @@ import {
   SplitHeading,
 } from "@/components/site/primitives";
 import Lightbox from "@/components/site/Lightbox";
-import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
+import { PhotoReel } from "@/components/site/PhotoReel";
 import { Occasions } from "@/components/site/Occasions";
 import { useMediaQuery } from "@/hooks/use-reveal";
 import { useSiteContent } from "@/components/site/ContentProvider";
@@ -88,18 +88,13 @@ function GalleryPage() {
         crumb="Wedding Gallery"
       />
 
-      {/* One gallery treatment on this page. Drag or swipe the reel, tap the
-          centre photograph to open it full size. */}
+      {/* Swipe the reel, tap a photograph to open it full size. Native
+          scroll-snap so it works on every touch device. */}
       <Section tone="paper">
-        <CoverflowCarousel
-          slides={gallery.map((g) => ({ src: g.thumb, alt: g.caption, title: g.caption }))}
+        <PhotoReel
+          photos={gallery.map((g) => ({ src: g.thumb, alt: g.caption, caption: g.caption }))}
           label="Wedding photographs"
-          showCaption
-          showPagination
-          showNavigation
-          cardWidth="clamp(190px, 26vw, 300px)"
-          cardClassName="jw-cf-card"
-          onActivate={(n) => setLightbox(n)}
+          onOpen={(n) => setLightbox(n)}
         />
         <Reveal delay={0.1}>
           <p className="mx-auto mt-2 max-w-md text-center font-[family-name:var(--font-util)] text-[10.5px] uppercase tracking-[0.22em] text-mist">
