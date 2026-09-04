@@ -10,7 +10,8 @@ import {
 } from "@/components/site/primitives";
 import { Pathways } from "@/components/site/Pathways";
 import RitualIndex from "@/components/site/RitualIndex";
-import { meta, rituals, ritualsPage, site } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
+import { meta, rituals as seoRituals } from "@/data/site";
 
 export const Route = createFileRoute("/wedding-rituals")({
   head: () => ({
@@ -19,14 +20,15 @@ export const Route = createFileRoute("/wedding-rituals")({
       { name: "description", content: meta.rituals.description },
       { property: "og:title", content: meta.rituals.title },
       { property: "og:description", content: meta.rituals.description },
-      { property: "og:image", content: rituals[7]?.image ?? "" },
-      { name: "twitter:image", content: rituals[7]?.image ?? "" },
+      { property: "og:image", content: seoRituals[7]?.image ?? "" },
+      { name: "twitter:image", content: seoRituals[7]?.image ?? "" },
     ],
   }),
   component: RitualsPage,
 });
 
 function RitualsPage() {
+  const { rituals, ritualsPage, site } = useSiteContent();
   return (
     <>
       <Masthead

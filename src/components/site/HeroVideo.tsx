@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { heroVideo } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 
 type NetworkInfo = { saveData?: boolean; effectiveType?: string };
 
@@ -14,6 +14,7 @@ type NetworkInfo = { saveData?: boolean; effectiveType?: string };
  * imperatively before play is attempted and the rejection is swallowed.
  */
 export function HeroVideo() {
+  const { heroVideo } = useSiteContent();
   const [mount, setMount] = useState(false);
   const [live, setLive] = useState(false);
   const ref = useRef<HTMLVideoElement>(null);

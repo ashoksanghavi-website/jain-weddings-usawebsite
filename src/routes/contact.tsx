@@ -3,7 +3,8 @@ import { useState, type FormEvent } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { BrandIcon } from "@/components/site/BrandIcon";
 import { Kicker, Masthead, Section, StampFrame } from "@/components/site/primitives";
-import { contactPage, images, meta, site, socials } from "@/data/site";
+import { meta, images as seo } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { submitEnquiry } from "@/lib/enquiries";
 
 export const Route = createFileRoute("/contact")({
@@ -13,8 +14,8 @@ export const Route = createFileRoute("/contact")({
       { name: "description", content: meta.contact.description },
       { property: "og:title", content: meta.contact.title },
       { property: "og:description", content: meta.contact.description },
-      { property: "og:image", content: images.celebration.src },
-      { name: "twitter:image", content: images.celebration.src },
+      { property: "og:image", content: seo.celebration.src },
+      { name: "twitter:image", content: seo.celebration.src },
     ],
   }),
   component: ContactRoute,
@@ -95,6 +96,7 @@ function Field({
 }
 
 function ContactRoute() {
+  const { contactPage, images, site, socials } = useSiteContent();
   const [state, setState] = useState<"idle" | "loading" | "sent" | "error">("idle");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {

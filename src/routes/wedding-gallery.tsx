@@ -13,7 +13,8 @@ import Lightbox from "@/components/site/Lightbox";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { Occasions } from "@/components/site/Occasions";
 import { useMediaQuery } from "@/hooks/use-reveal";
-import { films, gallery, galleryPage, meta } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
+import { meta, gallery as seoGallery } from "@/data/site";
 
 export const Route = createFileRoute("/wedding-gallery")({
   head: () => ({
@@ -22,8 +23,8 @@ export const Route = createFileRoute("/wedding-gallery")({
       { name: "description", content: meta.gallery.description },
       { property: "og:title", content: meta.gallery.title },
       { property: "og:description", content: meta.gallery.description },
-      { property: "og:image", content: gallery[0]?.full ?? "" },
-      { name: "twitter:image", content: gallery[0]?.full ?? "" },
+      { property: "og:image", content: seoGallery[0]?.full ?? "" },
+      { name: "twitter:image", content: seoGallery[0]?.full ?? "" },
     ],
   }),
   component: GalleryPage,
@@ -74,6 +75,7 @@ function FilmFacade({ src, title, poster }: { src: string; title: string; poster
 }
 
 function GalleryPage() {
+  const { films, gallery, galleryPage } = useSiteContent();
   const [lightbox, setLightbox] = useState<number | null>(null);
   const compact = useMediaQuery("(max-width: 767px), (prefers-reduced-motion: reduce)");
 

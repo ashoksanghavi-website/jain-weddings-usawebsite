@@ -1,10 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { BrandIcon } from "@/components/site/BrandIcon";
-import { LOGO, about, images, invitationBand, routes, site, socials } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { Button, GoldRule, Kicker, SplitHeading } from "./primitives";
 
 export function InvitationBand() {
+  const { images, invitationBand, site } = useSiteContent();
   return (
     /* Deep ivory rather than maroon. It used to sit directly on top of the
        maroon footer, so the two ran together as one slab and the call to
@@ -83,6 +84,7 @@ export function InvitationBand() {
 }
 
 export function Footer() {
+  const { LOGO, about, routes, site, socials } = useSiteContent();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (

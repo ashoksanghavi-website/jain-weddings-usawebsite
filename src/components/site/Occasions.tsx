@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MapPin, Sun } from "lucide-react";
-import { galleryPage } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { GoldRule, Kicker, Reveal, SplitHeading } from "@/components/site/primitives";
 
 /**
@@ -8,6 +8,7 @@ import { GoldRule, Kicker, Reveal, SplitHeading } from "@/components/site/primit
  * swap together, so the chips are a control rather than decoration.
  */
 export function Occasions() {
+  const { galleryPage } = useSiteContent();
   const [i, setI] = useState(0);
   const active = galleryPage.occasions[i]!;
 

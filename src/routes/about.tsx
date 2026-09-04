@@ -12,7 +12,8 @@ import {
   StampFrame,
 } from "@/components/site/primitives";
 import { Pathways } from "@/components/site/Pathways";
-import { about, images, meta, site } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
+import { meta, images as seo } from "@/data/site";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -21,14 +22,15 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: meta.about.description },
       { property: "og:title", content: meta.about.title },
       { property: "og:description", content: meta.about.description },
-      { property: "og:image", content: images.aboutPortrait.src },
-      { name: "twitter:image", content: images.aboutPortrait.src },
+      { property: "og:image", content: seo.aboutPortrait.src },
+      { name: "twitter:image", content: seo.aboutPortrait.src },
     ],
   }),
   component: About,
 });
 
 function About() {
+  const { about, images, site } = useSiteContent();
   return (
     <>
       <Masthead kicker={about.kicker} title={about.h1} line={about.line} crumb="About" />

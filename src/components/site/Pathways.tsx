@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { pathways } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { GoldRule, Kicker, Reveal, Section, SplitHeading } from "@/components/site/primitives";
 
 /**
@@ -8,6 +8,7 @@ import { GoldRule, Kicker, Reveal, Section, SplitHeading } from "@/components/si
  * you are already on is filtered out rather than shown and disabled.
  */
 export function Pathways({ exclude }: { exclude?: string }) {
+  const { pathways } = useSiteContent();
   const cards = pathways.cards.filter((c) => c.to !== exclude);
 
   return (

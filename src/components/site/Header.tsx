@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Mail, MapPin, Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LOGO, servicesMenu, site, weddingMenu } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 
 function NavLink({
   to,
@@ -36,6 +36,7 @@ function NavLink({
 }
 
 export function Header() {
+  const { LOGO, servicesMenu, site, weddingMenu } = useSiteContent();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);

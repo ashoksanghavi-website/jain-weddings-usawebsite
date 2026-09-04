@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { invite } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { CardModal } from "@/components/site/CardModal";
 import { submitEnquiry } from "@/lib/enquiries";
 
@@ -8,6 +8,7 @@ const DELAY = 30_000;
 
 /** Opens once per session, thirty seconds in. */
 export function InvitePopup() {
+  const { invite } = useSiteContent();
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);

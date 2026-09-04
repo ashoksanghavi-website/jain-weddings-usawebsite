@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { ArrowRight, Clock3, MapPin } from "lucide-react";
-import { servicesPage, site } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { Reveal } from "@/components/site/primitives";
 import { CardModal } from "@/components/site/CardModal";
 import { submitEnquiry } from "@/lib/enquiries";
@@ -18,6 +18,7 @@ const CORNERS = ["jw-pl-a", "jw-pl-b", "jw-pl-c", "jw-pl-d"];
  * enquiries table, tagged source 'poojan' with the poojan name as the subject.
  */
 function PoojanEnquiry({ subject }: { subject: string }) {
+  const { site } = useSiteContent();
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
@@ -92,6 +93,7 @@ function PoojanEnquiry({ subject }: { subject: string }) {
 }
 
 export function PoojanGrid() {
+  const { servicesPage } = useSiteContent();
   const [open, setOpen] = useState<number | null>(null);
   const [omOpen, setOmOpen] = useState(false);
   const item = open === null ? null : servicesPage.poojans[open]!;

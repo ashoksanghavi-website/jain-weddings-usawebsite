@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
-import { ceremonyEnquiry } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { CardModal } from "@/components/site/CardModal";
 import { submitEnquiry } from "@/lib/enquiries";
 
@@ -10,6 +10,7 @@ import { submitEnquiry } from "@/lib/enquiries";
  * scrolling to the bottom of the page to find a form.
  */
 export function CeremonyEnquiry({ number, title }: { number: string; title: string }) {
+  const { ceremonyEnquiry } = useSiteContent();
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);

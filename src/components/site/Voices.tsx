@@ -1,6 +1,6 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { gallery, testimonials } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 
 /**
  * Editorial testimonials: a large index numeral, the quote, the family, and a
@@ -13,6 +13,7 @@ import { gallery, testimonials } from "@/data/site";
  * motion.
  */
 export function Voices() {
+  const { gallery, testimonials } = useSiteContent();
   const [active, setActive] = useState(0);
   const [out, setOut] = useState(false);
   const total = testimonials.length;

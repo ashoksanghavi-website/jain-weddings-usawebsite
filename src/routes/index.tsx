@@ -17,7 +17,8 @@ import ImageStreamHero from "@/components/ui/image-stream-hero";
 import { Voices } from "@/components/site/Voices";
 import { CeremonyEnquiry } from "@/components/site/CeremonyEnquiry";
 import { Pathways } from "@/components/site/Pathways";
-import { gallery, home, images, meta, rituals, site, testimonials } from "@/data/site";
+import { meta, images as seo } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
 import { HeroVideo } from "@/components/site/HeroVideo";
 import { Phone } from "lucide-react";
 
@@ -28,14 +29,15 @@ export const Route = createFileRoute("/")({
       { name: "description", content: meta.home.description },
       { property: "og:title", content: meta.home.title },
       { property: "og:description", content: meta.home.description },
-      { property: "og:image", content: images.hero.src },
-      { name: "twitter:image", content: images.hero.src },
+      { property: "og:image", content: seo.hero.src },
+      { name: "twitter:image", content: seo.hero.src },
     ],
   }),
   component: Home,
 });
 
 function Hero() {
+  const { home, site } = useSiteContent();
   const sideA = useRef<HTMLDivElement | null>(null);
   const sideB = useRef<HTMLDivElement | null>(null);
 
@@ -117,6 +119,7 @@ function Hero() {
 }
 
 function Home() {
+  const { gallery, home, images, rituals, site, testimonials } = useSiteContent();
   const c = home.celebration;
 
   return (

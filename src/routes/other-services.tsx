@@ -11,7 +11,8 @@ import {
 } from "@/components/site/primitives";
 import { PoojanGrid } from "@/components/site/PoojanGrid";
 import { Pathways } from "@/components/site/Pathways";
-import { images, meta, servicesPage } from "@/data/site";
+import { useSiteContent } from "@/components/site/ContentProvider";
+import { meta, images as seo } from "@/data/site";
 
 export const Route = createFileRoute("/other-services")({
   head: () => ({
@@ -20,14 +21,15 @@ export const Route = createFileRoute("/other-services")({
       { name: "description", content: meta.services.description },
       { property: "og:title", content: meta.services.title },
       { property: "og:description", content: meta.services.description },
-      { property: "og:image", content: images.ganesh.src },
-      { name: "twitter:image", content: images.ganesh.src },
+      { property: "og:image", content: seo.ganesh.src },
+      { name: "twitter:image", content: seo.ganesh.src },
     ],
   }),
   component: ServicesPage,
 });
 
 function ServicesPage() {
+  const { images, servicesPage } = useSiteContent();
   return (
     <>
       <Masthead

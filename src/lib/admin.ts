@@ -1,99 +1,23 @@
 import { createServerFn } from "@tanstack/react-start";
-import {
-  getCookie,
-  setCookie,
-  deleteCookie,
-  getRequestIP,
-} from "@tanstack/react-start/server";
 import { neon } from "@neondatabase/serverless";
 import { z } from "zod";
 import {
-  createHash,
-  createHmac,
-  scryptSync,
-  timingSafeEqual,
-} from "node:crypto";
+  callerIp,
+  clearAdminSession,
+  currentAdminEmail,
+  dbUrl,
+  hashPassword,
+  loginAllowed,
+  setAdminSession,
+  verifyPassword,
+} from "@/lib/session";
 
 /**
- * Admin auth for the enquiries dashboard. One admin user (row in `admin_users`,
- * scrypt-hashed password). Login sets an HMAC-signed, HttpOnly session cookie.
- * The signing key is derived from DATABASE_URL, so no extra secret is needed.
+ * Admin server functions for the enquiries dashboard and the content CMS auth.
+ * All the server-only auth machinery lives in `@/lib/session`; this file only
+ * defines the RPC endpoints, so the client gets thin stubs and none of the
+ * server internals.
  */
-
-const COOKIE = "jw_admin";
-const MAX_AGE = 60 * 60 * 24 * 7; // 7 days
-
-function dbUrl(): string {
-  const u = process.env.DATABASE_URL;
-  if (!u) throw new Error("The server is not configured (no database).");
-  return u;
-}
-
-function sessionKey(url: string): Buffer {
-  return createHash("sha256").update("jw-admin-session::" + url).digest();
-}
-
-function sign(payload: object, key: Buffer): string {
-  const body = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const sig = createHmac("sha256", key).update(body).digest("base64url");
-  return `${body}.${sig}`;
-}
-
-function verifyToken(token: string, key: Buffer): { email: string } | null {
-  const parts = token.split(".");
-  if (parts.length !== 2) return null;
-  const [body, sig] = parts;
-  const expected = createHmac("sha256", key).update(body).digest("base64url");
-  const a = Buffer.from(sig);
-  const b = Buffer.from(expected);
-  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
-  try {
-    const data = JSON.parse(Buffer.from(body, "base64url").toString()) as {
-      email?: string;
-      exp?: number;
-    };
-    if (!data.email || typeof data.exp !== "number") return null;
-    if (data.exp < Math.floor(Date.now() / 1000)) return null;
-    return { email: data.email };
-  } catch {
-    return null;
-  }
-}
-
-function verifyPassword(password: string, stored: string): boolean {
-  const [saltHex, hashHex] = stored.split(":");
-  if (!saltHex || !hashHex) return false;
-  const derived = scryptSync(password, Buffer.from(saltHex, "hex"), 64);
-  const expected = Buffer.from(hashHex, "hex");
-  return derived.length === expected.length && timingSafeEqual(derived, expected);
-}
-
-// Per-IP login throttle (best-effort, per warm instance).
-const attempts = new Map<string, { n: number; first: number }>();
-function loginAllowed(ip: string): boolean {
-  const now = Date.now();
-  const rec = attempts.get(ip);
-  if (!rec || now - rec.first > 15 * 60 * 1000) {
-    attempts.set(ip, { n: 1, first: now });
-    return true;
-  }
-  rec.n += 1;
-  return rec.n <= 10;
-}
-
-function callerIp(): string {
-  try {
-    return getRequestIP({ xForwardedFor: true }) || "unknown";
-  } catch {
-    return "unknown";
-  }
-}
-
-function currentAdminEmail(): string | null {
-  const token = getCookie(COOKIE);
-  if (!token) return null;
-  return verifyToken(token, sessionKey(dbUrl()))?.email ?? null;
-}
 
 const LoginInput = z.object({
   email: z.string().trim().email().max(200),
@@ -106,8 +30,7 @@ export const adminLogin = createServerFn({ method: "POST" })
     if (!loginAllowed(callerIp())) {
       throw new Error("Too many attempts. Please wait a few minutes and try again.");
     }
-    const url = dbUrl();
-    const sql = neon(url);
+    const sql = neon(dbUrl());
     const rows = (await sql`
       select password_hash from admin_users
       where lower(email) = lower(${data.email}) limit 1
@@ -119,22 +42,12 @@ export const adminLogin = createServerFn({ method: "POST" })
     await sql`update admin_users set last_login_at = now() where lower(email) = lower(${data.email})`;
 
     const email = data.email.toLowerCase();
-    const token = sign(
-      { email, exp: Math.floor(Date.now() / 1000) + MAX_AGE },
-      sessionKey(url),
-    );
-    setCookie(COOKIE, token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: MAX_AGE,
-    });
+    setAdminSession(email);
     return { ok: true as const, email };
   });
 
 export const adminLogout = createServerFn({ method: "POST" }).handler(async () => {
-  deleteCookie(COOKIE, { path: "/" });
+  clearAdminSession();
   return { ok: true as const };
 });
 
@@ -175,3 +88,24 @@ export const adminEnquiries = createServerFn({ method: "GET" }).handler(async ()
   `) as AdminEnquiry[];
   return { email, enquiries };
 });
+
+const ChangePasswordInput = z.object({
+  currentPassword: z.string().min(1).max(200),
+  newPassword: z.string().min(8, "New password must be at least 8 characters.").max(200),
+});
+
+export const adminChangePassword = createServerFn({ method: "POST" })
+  .validator((raw: unknown) => ChangePasswordInput.parse(raw))
+  .handler(async ({ data }) => {
+    const email = currentAdminEmail();
+    if (!email) throw new Error("Not authorised.");
+    const sql = neon(dbUrl());
+    const rows = (await sql`
+      select password_hash from admin_users where lower(email) = lower(${email}) limit 1
+    `) as Array<{ password_hash: string }>;
+    if (!rows[0] || !verifyPassword(data.currentPassword, rows[0].password_hash)) {
+      throw new Error("Your current password is incorrect.");
+    }
+    await sql`update admin_users set password_hash = ${hashPassword(data.newPassword)} where lower(email) = lower(${email})`;
+    return { ok: true as const };
+  });

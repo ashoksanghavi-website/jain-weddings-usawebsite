@@ -16,6 +16,8 @@ import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import BackToTop from "@/components/site/BackToTop";
 import { InvitePopup } from "@/components/site/InvitePopup";
+import { ContentProvider } from "@/components/site/ContentProvider";
+import { getSiteContent } from "@/lib/content";
 import { notFoundPage, site } from "@/data/site";
 import { Button, Kicker } from "@/components/site/primitives";
 
@@ -90,6 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
   }),
+  loader: async () => ({ content: await getSiteContent() }),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -112,33 +115,47 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { content } = Route.useLoaderData();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  // The admin panel is a standalone tool: no public header, footer, or popups.
+  if (isAdmin) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <main id="main" key={pathname}>
+          <Outlet />
+        </main>
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-kumkum focus:px-5 focus:py-3 focus:font-util focus:text-[12px] focus:uppercase focus:tracking-[0.16em] focus:text-paper"
-      >
-        Skip to content
-      </a>
-      <Header />
-      <main
-        id="main"
-        key={pathname}
-        className="pt-[74px] min-[520px]:pt-[112px] animate-in fade-in duration-[350ms]"
-      >
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </main>
-      <Footer />
-      <BackToTop />
-      {/* The invitation popup is a public-visitor prompt; keep it off the admin view. */}
-      {pathname.startsWith("/admin") ? null : <InvitePopup />}
+      <ContentProvider value={content}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-kumkum focus:px-5 focus:py-3 focus:font-util focus:text-[12px] focus:uppercase focus:tracking-[0.16em] focus:text-paper"
+        >
+          Skip to content
+        </a>
+        <Header />
+        <main
+          id="main"
+          key={pathname}
+          className="pt-[74px] min-[520px]:pt-[112px] animate-in fade-in duration-[350ms]"
+        >
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </main>
+        <Footer />
+        <BackToTop />
+        <InvitePopup />
+      </ContentProvider>
     </QueryClientProvider>
   );
 }
