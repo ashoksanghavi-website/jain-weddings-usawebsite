@@ -137,7 +137,8 @@ function RootComponent() {
       </main>
       <Footer />
       <BackToTop />
-      <InvitePopup />
+      {/* The invitation popup is a public-visitor prompt; keep it off the admin view. */}
+      {pathname.startsWith("/admin") ? null : <InvitePopup />}
     </QueryClientProvider>
   );
 }
