@@ -148,7 +148,11 @@ export function CoverflowCarousel({
       cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     }
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      /* iOS Safari can throw here for touch pointers; the drag still works. */
+    }
     targetRef.current = posRef.current;
     movedRef.current = false;
     dragRef.current = {
@@ -205,14 +209,43 @@ export function CoverflowCarousel({
     const measure = () => {
       const card = cardRefs.current[0];
       if (!card) return;
-      widthRef.current = card.offsetWidth;
-      paint();
+      // iOS Safari can report 0 for offsetWidth on the first pass (and while a
+      // card is off-screen), which made paint() bail and left every card stacked
+      // in the centre with nothing draggable. Fall back to the computed width,
+      // and finally to an estimate, so the reel always lays out.
+      let w = card.offsetWidth || parseFloat(getComputedStyle(card).width) || 0;
+      if (!w) w = Math.min(300, Math.max(160, window.innerWidth * 0.26));
+      if (w) {
+        widthRef.current = w;
+        paint();
+      }
     };
 
     measure();
+    const raf = requestAnimationFrame(measure);
+    const t1 = window.setTimeout(measure, 120);
+    const t2 = window.setTimeout(measure, 500);
+
     const observer = new ResizeObserver(measure);
     observer.observe(frame);
-    return () => observer.disconnect();
+
+    const imgs = Array.from(frame.querySelectorAll("img"));
+    imgs.forEach((img) => {
+      if (!img.complete) img.addEventListener("load", measure, { once: true });
+    });
+
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(raf);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      imgs.forEach((img) => img.removeEventListener("load", measure));
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
+    };
   }, [paint]);
 
   React.useEffect(
@@ -253,11 +286,19 @@ export function CoverflowCarousel({
             }
           }}
           className="cursor-grab overflow-hidden py-10 outline-none active:cursor-grabbing"
-          style={{ perspective: `calc(var(--cf-card) * ${perspective})`, touchAction: "pan-y" }}
+          style={{
+            perspective: `calc(var(--cf-card) * ${perspective})`,
+            WebkitPerspective: `calc(var(--cf-card) * ${perspective})`,
+            touchAction: "pan-y",
+          }}
         >
           <div
             className="relative select-none"
-            style={{ height: "var(--cf-card)", transformStyle: "preserve-3d" }}
+            style={{
+              height: "var(--cf-card)",
+              transformStyle: "preserve-3d",
+              WebkitTransformStyle: "preserve-3d",
+            }}
           >
             {slides.map((slide, index) => (
               <div
