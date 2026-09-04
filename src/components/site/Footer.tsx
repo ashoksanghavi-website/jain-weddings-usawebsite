@@ -204,6 +204,19 @@ export function Footer() {
             {site.signatory}
           </p>
         </div>
+
+        <div className="container-site relative border-t border-gold2/10 py-4 text-center font-util text-[10.5px] uppercase tracking-[0.16em] text-paper/40">
+          Designed by{" "}
+          <a
+            href="https://www.automatedcodes.com"
+            target="_blank"
+            rel="noreferrer"
+            className="text-gold2/80 underline-offset-4 transition-colors hover:text-gold2 hover:underline"
+          >
+            Automated Codes
+            <span className="sr-only">, opens in a new window</span>
+          </a>
+        </div>
       </footer>
     </>
   );
