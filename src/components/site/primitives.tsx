@@ -1,8 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode, HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { useReveal } from "@/hooks/use-reveal";
+
+const MotionLink = motion.create(Link);
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* ---------------- Reveal ---------------- */
 
@@ -17,15 +21,22 @@ export function Reveal({
   className?: string;
   as?: "div" | "section" | "li" | "article";
 }) {
-  const { ref, shown } = useReveal<HTMLDivElement>();
+  const reduce = useReducedMotion();
+  if (reduce) {
+    const Tag = As;
+    return <Tag className={className}>{children}</Tag>;
+  }
+  const MotionTag = motion[As];
   return (
-    <As
-      ref={ref as never}
-      className={cn(shown ? "reveal-shown" : "reveal-hidden", className)}
-      style={{ transitionDelay: `${delay}s` }}
+    <MotionTag
+      className={className}
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-8% 0px" }}
+      transition={{ duration: 0.7, delay, ease: EASE }}
     >
       {children}
-    </As>
+    </MotionTag>
   );
 }
 
@@ -191,7 +202,9 @@ export function StampFrame({
 /* ---------------- Buttons ---------------- */
 
 const btnBase =
-  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 font-util text-[11.5px] font-semibold uppercase tracking-[0.16em] transition-[background-color,transform,color] duration-[250ms] hover:-translate-y-0.5 active:scale-[0.98]";
+  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 font-util text-[11.5px] font-semibold uppercase tracking-[0.16em] transition-[background-color,color] duration-[250ms]";
+
+const SPRING = { type: "spring" as const, stiffness: 420, damping: 18 };
 
 export function Button({
   children,
@@ -212,6 +225,7 @@ export function Button({
   disabled?: boolean;
   onClick?: () => void;
 }) {
+  const reduce = useReducedMotion();
   const styles = cn(
     btnBase,
     variant === "primary" && "bg-kumkum text-paper hover:bg-[#8f2019]",
@@ -220,25 +234,35 @@ export function Button({
     disabled && "pointer-events-none opacity-60",
     className,
   );
+  const anim =
+    reduce || disabled
+      ? {}
+      : { whileHover: { y: -2, scale: 1.03 }, whileTap: { scale: 0.96 }, transition: SPRING };
 
   if (to) {
     return (
-      <Link to={to} className={styles}>
+      <MotionLink to={to} className={styles} {...anim}>
         {children}
-      </Link>
+      </MotionLink>
     );
   }
   if (href) {
     return (
-      <a href={href} className={styles}>
+      <motion.a href={href} className={styles} {...anim}>
         {children}
-      </a>
+      </motion.a>
     );
   }
   return (
-    <button type={type ?? "button"} className={styles} disabled={disabled} onClick={onClick}>
+    <motion.button
+      type={type ?? "button"}
+      className={styles}
+      disabled={disabled}
+      onClick={onClick}
+      {...anim}
+    >
       {children}
-    </button>
+    </motion.button>
   );
 }
 
@@ -253,13 +277,21 @@ export function ArrowLink({
   tone?: "ink" | "paper";
   className?: string;
 }) {
+  const reduce = useReducedMotion();
+  const anim = reduce
+    ? {}
+    : { whileHover: { x: 4 }, whileTap: { scale: 0.98 }, transition: SPRING };
   return (
-    <Link to={to} className={cn("jw-arrow group", tone === "paper" && "jw-arrow-paper", className)}>
+    <MotionLink
+      to={to}
+      className={cn("jw-arrow group", tone === "paper" && "jw-arrow-paper", className)}
+      {...anim}
+    >
       <span className="jw-arrow-label">{children}</span>
       <span aria-hidden className="jw-arrow-disc">
         <ArrowRight className="h-[13px] w-[13px]" aria-hidden />
       </span>
-    </Link>
+    </MotionLink>
   );
 }
 

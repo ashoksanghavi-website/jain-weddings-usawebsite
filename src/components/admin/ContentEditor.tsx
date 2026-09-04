@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { getAdminContent, saveSiteContent } from "@/lib/content";
+import { uploadAsset } from "@/lib/assets";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Json = any;
@@ -33,6 +34,21 @@ const SECTION_LABELS: Record<string, string> = {
   pathways: "Pathways",
   notFoundPage: "404 page",
 };
+
+/**
+ * Sections not shown in the editor: the WordPress image base, SEO/page titles,
+ * and the header/footer chrome (logo, navigation, menus, social links). These
+ * stay on the shipped defaults and are not edited from here.
+ */
+const HIDDEN_SECTIONS = new Set([
+  "IMG",
+  "LOGO",
+  "meta",
+  "routes",
+  "weddingMenu",
+  "servicesMenu",
+  "socials",
+]);
 
 function humanize(key: string): string {
   if (/^h[1-6]$/i.test(key)) return key.toUpperCase();
@@ -79,13 +95,39 @@ function cloneTemplate(sample: Json): Json {
 
 function MediaField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [broken, setBroken] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
   useEffect(() => setBroken(false), [value]);
   const showImg = value && isImage(value) && !broken;
+
+  async function onFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setErr(null);
+    setBusy(true);
+    try {
+      const dataUrl = await new Promise<string>((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(String(r.result));
+        r.onerror = () => rej(new Error("Could not read the file."));
+        r.readAsDataURL(file);
+      });
+      const m = /^data:([^;]+);base64,(.*)$/s.exec(dataUrl);
+      if (!m) throw new Error("Unsupported file.");
+      const result = await uploadAsset({ data: { contentType: m[1]!, base64: m[2]! } });
+      onChange(result.url);
+    } catch (e2) {
+      setErr(e2 instanceof Error ? e2.message : "Upload failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="flex items-start gap-3">
-      <div className="mt-1 h-16 w-16 shrink-0 overflow-hidden rounded border border-mist/30 bg-paper">
+      <div className="mt-0.5 h-16 w-16 shrink-0 overflow-hidden rounded border border-mist/30 bg-paper">
         {showImg ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={value}
             alt=""
@@ -98,14 +140,22 @@ function MediaField({ value, onChange }: { value: string; onChange: (v: string) 
           </div>
         )}
       </div>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Image / video URL"
-        className="jw-adm-input mt-1 flex-1"
-        spellCheck={false}
-      />
+      <div className="min-w-0 flex-1">
+        <label className={`jw-adm-mini inline-block ${busy ? "opacity-60" : "cursor-pointer"}`}>
+          {busy ? "Uploading…" : value ? "Replace image" : "Upload image"}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,video/mp4"
+            className="hidden"
+            onChange={onFile}
+            disabled={busy}
+          />
+        </label>
+        {err ? <p className="mt-1.5 text-[12px] text-kumkum">{err}</p> : null}
+        <p className="mt-1.5 truncate text-[11px] text-mist" title={value}>
+          {value || "No image yet"}
+        </p>
+      </div>
     </div>
   );
 }
@@ -307,7 +357,8 @@ export function ContentEditor() {
     try {
       const c = await getAdminContent();
       setContent(c);
-      setSection((s) => s || Object.keys(c)[0] || "");
+      const visible = Object.keys(c).filter((k) => !HIDDEN_SECTIONS.has(k));
+      setSection((s) => s || visible[0] || "");
       setStatus("ready");
       setDirty(false);
     } catch {
@@ -325,7 +376,10 @@ export function ContentEditor() {
     setSaved(false);
   }, []);
 
-  const sections = useMemo(() => (content ? Object.keys(content) : []), [content]);
+  const sections = useMemo(
+    () => (content ? Object.keys(content).filter((k) => !HIDDEN_SECTIONS.has(k)) : []),
+    [content],
+  );
 
   async function onSave() {
     if (!content) return;
