@@ -32,6 +32,12 @@ function GalleryPage() {
   const { gallery, galleryPage } = useSiteContent();
   const [lightbox, setLightbox] = useState<number | null>(null);
 
+  // The carousel opens centred on this photograph (falls back to the first).
+  const frontIndex = Math.max(
+    0,
+    gallery.findIndex((g) => g.caption === "Traditions and customs"),
+  );
+
   return (
     <>
       <Masthead
@@ -47,6 +53,7 @@ function GalleryPage() {
         <PhotoCarousel
           photos={gallery.map((g) => ({ src: g.thumb, caption: g.caption }))}
           label="Wedding photographs"
+          initialIndex={frontIndex}
           onOpen={(n) => setLightbox(n)}
         />
         <Reveal delay={0.1}>

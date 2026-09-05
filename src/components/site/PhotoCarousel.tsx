@@ -68,16 +68,20 @@ export function PhotoCarousel({
   photos,
   onOpen,
   label = "Photographs",
+  initialIndex = 0,
 }: {
   photos: CarouselPhoto[];
   onOpen?: (index: number) => void;
   label?: string;
+  /** Which photo sits front-and-centre when the carousel first appears. */
+  initialIndex?: number;
 }) {
-  const progress = useMotionValue(0);
-  const startProgress = React.useRef(0);
-  const activeRef = React.useRef(0);
+  const start = Number.isFinite(initialIndex) && initialIndex > 0 ? initialIndex : 0;
+  const progress = useMotionValue(start);
+  const startProgress = React.useRef(start);
+  const activeRef = React.useRef(start);
   const [width, setWidth] = React.useState(1200);
-  const [active, setActive] = React.useState(0);
+  const [active, setActive] = React.useState(start);
   const total = photos.length;
 
   React.useEffect(() => {

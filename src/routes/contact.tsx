@@ -37,7 +37,9 @@ function Field({
   options?: readonly string[];
 }) {
   const [value, setValue] = useState("");
-  const floated = value.length > 0;
+  // A date input always shows its own "dd-mm-yyyy" text, so its label must stay
+  // in the raised position or the two overlap. Everything else floats on value.
+  const floated = value.length > 0 || type === "date";
 
   const shared =
     "peer w-full border-0 border-b border-mist/50 bg-card px-1 pb-2 pt-6 text-ink outline-none transition-colors duration-300 focus:border-kumkum";
