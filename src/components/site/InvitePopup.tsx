@@ -69,18 +69,18 @@ export function InvitePopup() {
         </p>
       ) : (
         <>
-          <p className="text-[15.5px] leading-[1.75] text-ink/85">{invite.line}</p>
+          <p className="text-[14px] leading-[1.65] text-ink/85">{invite.line}</p>
 
-          <ul className="mt-6 border-y border-gold/25 py-5">
+          <ul className="mt-4 border-y border-gold/25 py-3.5">
             {invite.points.map((pt) => (
-              <li key={pt} className="flex gap-3 py-2 text-[14.5px] leading-snug text-ink/85">
-                <span aria-hidden className="mt-2 block h-1.5 w-1.5 shrink-0 rotate-45 bg-kumkum" />
+              <li key={pt} className="flex gap-3 py-1.5 text-[13.5px] leading-snug text-ink/85">
+                <span aria-hidden className="mt-1.5 block h-1.5 w-1.5 shrink-0 rotate-45 bg-kumkum" />
                 {pt}
               </li>
             ))}
           </ul>
 
-          <form onSubmit={onSubmit} className="mt-6">
+          <form onSubmit={onSubmit} className="mt-5">
             <div className="grid gap-x-6 sm:grid-cols-2">
               <label className="jw-inv-field">
                 <span>{invite.nameLabel}</span>
@@ -107,13 +107,13 @@ export function InvitePopup() {
               </p>
             ) : null}
 
-            <button type="submit" disabled={loading} className="jw-btn-primary mt-8 w-full">
+            <button type="submit" disabled={loading} className="jw-btn-primary mt-6 w-full">
               {loading ? "Sending" : invite.submit}
             </button>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="mt-4 w-full font-[family-name:var(--font-util)] text-[11.5px] uppercase tracking-[0.18em] text-mist transition-colors hover:text-ink"
+              className="mt-3 w-full font-[family-name:var(--font-util)] text-[11.5px] uppercase tracking-[0.18em] text-mist transition-colors hover:text-ink"
             >
               {invite.dismiss}
             </button>

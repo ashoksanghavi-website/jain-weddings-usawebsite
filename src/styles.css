@@ -290,7 +290,7 @@
 
 .jw-card-body {
   position: relative;
-  padding: 34px 24px 26px;
+  padding: 28px 22px 24px;
 }
 
 @media (min-width: 640px) {
@@ -299,12 +299,12 @@
     padding: 26px;
   }
   .jw-card {
-    max-width: 460px;
+    max-width: 396px;
     max-height: 86vh;
     animation: jw-pop 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .jw-card-body {
-    padding: 40px 36px 32px;
+    padding: 32px 30px 26px;
   }
 }
 
@@ -1743,6 +1743,30 @@
 .jw-form-card {
   position: relative;
   background: var(--color-card);
+  box-shadow: 0 20px 55px color-mix(in oklab, var(--color-maroon2) 13%, transparent);
+}
+/* engraved gold corner ticks, outside the printed inner border */
+.jw-form-card::before,
+.jw-form-card::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid color-mix(in oklab, var(--color-gold) 75%, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+.jw-form-card::before {
+  top: 4px;
+  left: 4px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.jw-form-card::after {
+  bottom: 4px;
+  right: 4px;
+  border-left: 0;
+  border-top: 0;
 }
 .jw-form-edge {
   position: absolute;

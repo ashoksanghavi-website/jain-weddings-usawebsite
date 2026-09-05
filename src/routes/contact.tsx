@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, type CSSProperties, type FormEvent } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { BrandIcon } from "@/components/site/BrandIcon";
 import { Kicker, Masthead, Section, StampFrame } from "@/components/site/primitives";
@@ -37,20 +37,51 @@ function Field({
   options?: readonly string[];
 }) {
   const [value, setValue] = useState("");
-  // A date input always shows its own "dd-mm-yyyy" text, so its label must stay
-  // in the raised position or the two overlap. Everything else floats on value.
-  const floated = value.length > 0 || type === "date";
+  const [focused, setFocused] = useState(false);
+  // The label floats up when the field is focused, holds a value, is a native
+  // date input (which always shows its own dd-mm-yyyy text) or a select. The
+  // raised/rest position is applied via INLINE STYLE — the earlier Tailwind
+  // arbitrary utilities (`-translate-y-[22px]`) worked in dev (JIT) but were not
+  // emitted into the production CSS, so the label overlapped the date text live.
+  const raised = focused || value.length > 0 || type === "date" || !!options;
+  const active = focused || value.length > 0;
 
   const shared =
-    "peer w-full border-0 border-b border-mist/50 bg-card px-1 pb-2 pt-6 text-ink outline-none transition-colors duration-300 focus:border-kumkum";
+    "w-full border-0 border-b border-gold/25 bg-transparent px-2 pb-2.5 pt-6 text-[15px] text-ink outline-none transition-colors duration-300";
+
+  const labelStyle: CSSProperties = {
+    transformOrigin: "left",
+    transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1), color 0.3s ease, letter-spacing 0.3s ease",
+    transform: raised ? "translateY(-2px) scale(0.78)" : "translateY(20px)",
+    color: focused ? "var(--color-kumkum)" : "var(--color-mist)",
+    letterSpacing: raised ? "0.14em" : "0.02em",
+  };
+
+  // Accent underline grows from the centre on focus/fill — driven by inline
+  // style so it always renders (Tailwind never purges it).
+  const underlineStyle: CSSProperties = {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: "2px",
+    background: "var(--color-kumkum)",
+    transformOrigin: "center",
+    transform: active ? "scaleX(1)" : "scaleX(0)",
+    transition: "transform 0.4s cubic-bezier(0.22,1,0.36,1)",
+  };
+
+  const focusProps = {
+    onFocus: () => setFocused(true),
+    onBlur: () => setFocused(false),
+  };
 
   return (
-    <div className="relative">
+    <div className="relative pt-3">
       <label
         htmlFor={id}
-        className={`pointer-events-none absolute left-1 origin-left font-util text-[13px] text-mist transition-all duration-300 peer-focus:-translate-y-[22px] peer-focus:scale-[0.8] ${
-          floated ? "-translate-y-[22px] scale-[0.8]" : "translate-y-[18px]"
-        }`}
+        style={labelStyle}
+        className="pointer-events-none absolute left-2 top-0 z-10 font-util text-[13px]"
       >
         {label}
         {required ? " *" : ""}
@@ -65,6 +96,7 @@ function Field({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className={shared}
+          {...focusProps}
         />
       ) : options ? (
         <select
@@ -73,6 +105,7 @@ function Field({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className={shared}
+          {...focusProps}
         >
           <option value="" />
           {options.map((o) => (
@@ -91,8 +124,10 @@ function Field({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className={shared}
+          {...focusProps}
         />
       )}
+      <span aria-hidden style={underlineStyle} />
     </div>
   );
 }
