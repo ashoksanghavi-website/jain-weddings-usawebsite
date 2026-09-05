@@ -3,13 +3,19 @@
  * used across the site. Components must not hardcode copy.
  */
 
-export const IMG = "https://jainweddingsusa.com/wp-content/uploads";
+// Images are served locally from public/wp so the site never depends on the old
+// WordPress host (which now 403s hotlinks and is being replaced by this site).
+export const IMG = "/wp";
 
 export const LOGO = "/logo.png";
 
-/** The ceremony footage already hosted on the client's own site. */
+/**
+ * The hero still. The old ceremony .mp4 lived only on the WordPress host, which
+ * now blocks it (403), so the hero shows this poster. Add a local mp4 path here
+ * to bring motion back.
+ */
 export const heroVideo = {
-  mp4: `${IMG}/2020/06/ezgif.com-gif-maker.mp4`,
+  mp4: "",
   poster: `${IMG}/revslider/slaido_96/fire-indian-wedding.jpg`,
 };
 
@@ -132,7 +138,10 @@ export const images = {
   },
   certificate: { src: `${IMG}/2020/06/ordination-certificate.jpg`, alt: "Ordination certificate" },
   aboutMission: { src: `${IMG}/2020/06/JW_aboutusimg4-1.jpg`, alt: "A Jain wedding ceremony" },
-  contactBand: { src: `${IMG}/2020/06/Webp.net-resizeimage-1-2.jpg`, alt: "" },
+  contactBand: {
+    src: `${IMG}/2020/06/asian-wedding-photographer-leicester-226pp_w768_h512.jpg`,
+    alt: "",
+  },
 };
 
 export type Ritual = {

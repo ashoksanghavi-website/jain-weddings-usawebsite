@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Play } from "lucide-react";
 import {
   GoldRule,
   Kicker,
@@ -10,9 +9,8 @@ import {
   SplitHeading,
 } from "@/components/site/primitives";
 import Lightbox from "@/components/site/Lightbox";
-import { PhotoReel } from "@/components/site/PhotoReel";
+import { PhotoCarousel } from "@/components/site/PhotoCarousel";
 import { Occasions } from "@/components/site/Occasions";
-import { useMediaQuery } from "@/hooks/use-reveal";
 import { useSiteContent } from "@/components/site/ContentProvider";
 import { meta, gallery as seoGallery } from "@/data/site";
 
@@ -30,54 +28,9 @@ export const Route = createFileRoute("/wedding-gallery")({
   component: GalleryPage,
 });
 
-function FilmFacade({ src, title, poster }: { src: string; title: string; poster: string }) {
-  const [playing, setPlaying] = useState(false);
-
-  if (playing) {
-    return (
-      <video
-        src={src}
-        controls
-        autoPlay
-        className="aspect-video w-full border border-gold/40 bg-maroon2"
-      >
-        <track kind="captions" />
-      </video>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={() => setPlaying(true)}
-      aria-label={`Play the film, ${title}`}
-      className="group relative block aspect-video w-full overflow-hidden border border-gold/40"
-    >
-      <img
-        src={poster}
-        alt=""
-        width={800}
-        height={450}
-        loading="lazy"
-        decoding="async"
-        className="h-full w-full object-cover"
-      />
-      <span className="absolute inset-0 grid place-items-center bg-maroon2/45 transition-colors group-hover:bg-maroon2/60">
-        <span className="grid h-16 w-16 place-items-center rounded-full border border-gold2/60 bg-maroon/70">
-          <Play className="h-6 w-6 text-paper" aria-hidden />
-        </span>
-      </span>
-      <span className="absolute bottom-0 left-0 right-0 bg-maroon/85 p-3 font-util text-[11px] uppercase tracking-[0.22em] text-gold2">
-        {title}
-      </span>
-    </button>
-  );
-}
-
 function GalleryPage() {
-  const { films, gallery, galleryPage } = useSiteContent();
+  const { gallery, galleryPage } = useSiteContent();
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const compact = useMediaQuery("(max-width: 767px), (prefers-reduced-motion: reduce)");
 
   return (
     <>
@@ -91,8 +44,8 @@ function GalleryPage() {
       {/* Swipe the reel, tap a photograph to open it full size. Native
           scroll-snap so it works on every touch device. */}
       <Section tone="paper">
-        <PhotoReel
-          photos={gallery.map((g) => ({ src: g.thumb, alt: g.caption, caption: g.caption }))}
+        <PhotoCarousel
+          photos={gallery.map((g) => ({ src: g.thumb, caption: g.caption }))}
           label="Wedding photographs"
           onOpen={(n) => setLightbox(n)}
         />
@@ -136,29 +89,6 @@ function GalleryPage() {
 
       <Section tone="paper">
         <Occasions />
-      </Section>
-
-      <Section tone="tint">
-        <div className="mx-auto max-w-2xl text-center">
-          <Kicker>FILMS</Kicker>
-          <div className="mt-5">
-            <SplitHeading text={galleryPage.filmsHeading} level={2} />
-          </div>
-          <GoldRule className="mx-auto mt-6 max-w-[160px]" />
-          <Reveal delay={0.1}>
-            <p className="mt-6 text-[15.5px] leading-relaxed text-mist">{galleryPage.filmsLine}</p>
-          </Reveal>
-        </div>
-        <div className="mt-14 grid gap-8 md:grid-cols-2">
-          {films.map((f, i) => (
-            <FilmFacade
-              key={f.src}
-              src={f.src}
-              title={f.title}
-              poster={gallery[i + 4]?.thumb ?? gallery[0]!.thumb}
-            />
-          ))}
-        </div>
       </Section>
 
       {lightbox !== null ? (

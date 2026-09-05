@@ -77,7 +77,7 @@ export function HeroVideo() {
           animation: "jw-hero-scale 2s cubic-bezier(0.22,1,0.36,1) both",
         }}
       />
-      {mount ? (
+      {mount && heroVideo.mp4 ? (
         <video
           ref={ref}
           autoPlay
