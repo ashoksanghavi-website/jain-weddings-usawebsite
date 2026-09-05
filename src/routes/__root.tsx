@@ -103,6 +103,9 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* Mark that JS is available before first paint. Scroll-reveal styles are
+            gated behind html.js, so without JS everything is simply visible. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <HeadContent />
       </head>
       <body>

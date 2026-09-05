@@ -2438,26 +2438,76 @@ a.jw-contact-row:hover {
   min-width: 0;
 }
 
-/* ---------- entrance animations: pure CSS, fail-visible ----------
-   These play on their own on mount (no JS, no IntersectionObserver), and always
-   settle on the VISIBLE end state. If the JS bundle is slow or never runs (real
-   iOS Safari under load), content and images still appear. */
+/* ---------- entrance animations: scroll-triggered, fail-visible ----------
+   The inline head script adds `html.js` before first paint, and useReveal (which
+   is fail-open: initial in-view check + scroll listener + IntersectionObserver +
+   a safety timeout) toggles `.jw-in` when an element scrolls into view. All the
+   hidden start states are gated behind `html.js`, so without JavaScript — or if
+   the reveal never fires — everything is simply visible. */
 
-@keyframes jw-rv   { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
-@keyframes jw-ct   { from { transform: translateX(0); }               to { transform: translateX(101%); } }
-@keyframes jw-gr   { from { transform: scaleX(0); }                   to { transform: scaleX(1); } }
-@keyframes jw-word { from { transform: translateY(105%); }            to { transform: translateY(0); } }
-@keyframes jw-page { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.jw-word {
+  display: inline-block;
+}
+.jw-gr {
+  transform-origin: left;
+}
 
-.jw-rv   { animation: jw-rv 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--d, 0s); }
-.jw-ct   { animation: jw-ct 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.jw-gr   { transform-origin: left; animation: jw-gr 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.jw-word { display: inline-block; animation: jw-word 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--d, 0s); }
-.jw-page { animation: jw-page 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
+/* fade + rise as the element enters the viewport */
+html.js .jw-rv {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0s);
+  will-change: opacity, transform;
+}
+html.js .jw-rv.jw-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* gold hairline draws in */
+html.js .jw-gr {
+  transform: scaleX(0);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.js .jw-gr.jw-in {
+  transform: scaleX(1);
+}
+
+/* split-heading words rise out of their line */
+html.js .jw-sh .jw-word {
+  transform: translateY(105%);
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0s);
+}
+html.js .jw-sh.jw-in .jw-word {
+  transform: translateY(0);
+}
+
+/* page-enter, plays on each navigation (fail-visible: ends visible) */
+@keyframes jw-page {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.jw-page {
+  animation: jw-page 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .jw-rv, .jw-gr, .jw-word, .jw-page { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .jw-ct { animation: none !important; transform: translateX(101%); }
+  html.js .jw-rv,
+  html.js .jw-rv.jw-in,
+  html.js .jw-gr,
+  html.js .jw-gr.jw-in,
+  html.js .jw-sh .jw-word,
+  html.js .jw-sh.jw-in .jw-word,
+  .jw-page {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ---------- touch devices: no sticky :hover ----------

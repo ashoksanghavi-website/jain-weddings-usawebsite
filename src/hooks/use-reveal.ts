@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Entrance trigger. Deliberately fail-open: it reveals on first sight via an
- * IntersectionObserver, but ALSO via an initial check and a scroll/resize
- * listener (reliable on every mobile browser), and finally a safety timeout —
- * so content and images can never stay hidden if the observer misbehaves, which
- * is exactly what was leaving the reveal "curtains" stuck on iOS Safari.
+ * Scroll-into-view trigger. Reveals when the element enters the viewport, via an
+ * IntersectionObserver AND a capture scroll/resize listener (reliable on every
+ * mobile browser, iOS included) AND an initial check for anything already on
+ * screen. The hidden start state lives behind `html.js` in CSS, so without
+ * JavaScript everything is simply visible — nothing can stay stuck. No blanket
+ * timeout, so below-the-fold content genuinely animates in as you scroll to it.
  */
 export function useReveal<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T | null>(null);
@@ -21,17 +22,20 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
     let done = false;
     let io: IntersectionObserver | undefined;
     let raf = 0;
-    let timer = 0;
+
+    const cleanup = () => {
+      io?.disconnect();
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("load", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
 
     const finish = () => {
       if (done) return;
       done = true;
       setShown(true);
-      io?.disconnect();
-      window.removeEventListener("scroll", onScroll, true);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
+      cleanup();
     };
 
     const inView = () => {
@@ -60,12 +64,14 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
 
     window.addEventListener("scroll", onScroll, { passive: true, capture: true });
     window.addEventListener("resize", onScroll);
+    window.addEventListener("load", onScroll);
 
-    // Reveal anything already on screen at mount, and never let it stick.
+    // Reveal anything already on screen at mount.
     if (inView()) finish();
-    timer = window.setTimeout(finish, 4000);
 
-    return finish;
+    // Cleanup only removes listeners — it must NOT reveal (that would fire under
+    // React StrictMode's double-invoke and defeat the scroll trigger).
+    return cleanup;
   }, []);
 
   return { ref, shown };

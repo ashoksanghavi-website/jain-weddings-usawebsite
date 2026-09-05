@@ -9,13 +9,9 @@ export const IMG = "/wp";
 
 export const LOGO = "/logo.png";
 
-/**
- * The hero still. The old ceremony .mp4 lived only on the WordPress host, which
- * now blocks it (403), so the hero shows this poster. Add a local mp4 path here
- * to bring motion back.
- */
+/** The hero ceremony footage and its still, both served locally from public/wp. */
 export const heroVideo = {
-  mp4: "",
+  mp4: `${IMG}/2020/06/ezgif.com-gif-maker.mp4`,
   poster: `${IMG}/revslider/slaido_96/fire-indian-wedding.jpg`,
 };
 
