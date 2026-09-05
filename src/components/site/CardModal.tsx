@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 /**
@@ -65,8 +66,15 @@ export function CardModal({
   }, [open, onClose]);
 
   if (!open) return null;
+  // Rendered through a portal to <body>: an enquiry modal is opened from inside
+  // a page route, which lives under the .jw-page wrapper. That wrapper keeps an
+  // identity transform from its enter-animation, and any transform makes a
+  // `position: fixed` child (this backdrop) size to that wrapper — the whole
+  // page — instead of the viewport, so the dialog centred to the page, not the
+  // screen. The portal lifts it out so it centres on the viewport everywhere.
+  if (typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div
       className="jw-backdrop"
       onClick={(e) => {
@@ -109,6 +117,7 @@ export function CardModal({
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
