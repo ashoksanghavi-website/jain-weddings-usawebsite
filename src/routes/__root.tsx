@@ -20,6 +20,7 @@ import { ContentProvider } from "@/components/site/ContentProvider";
 import { getSiteContent } from "@/lib/content";
 import { notFoundPage, site } from "@/data/site";
 import { Button, Kicker } from "@/components/site/primitives";
+import { initReveal, scanReveal } from "@/lib/reveal";
 
 function NotFoundComponent() {
   return (
@@ -104,8 +105,16 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         {/* Mark that JS is available before first paint. Scroll-reveal styles are
-            gated behind html.js, so without JS everything is simply visible. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+            gated behind html.js, so without JS everything is simply visible.
+            Safety net: if the reveal controller never initialises (bundle failed
+            to load / hydration crashed on a device), drop the gate after 5s so
+            content can never stay hidden. initReveal() cancels this on success. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.documentElement.classList.add('js');window.__jwRevealSafety=setTimeout(function(){document.documentElement.classList.remove('js')},5000)",
+          }}
+        />
         <HeadContent />
       </head>
       <body>
@@ -122,8 +131,16 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
 
+  // Drive scroll reveals from one vanilla-JS controller (see src/lib/reveal.ts),
+  // independent of React so it can't get stranded on iOS. Re-scan on navigation
+  // to observe the new page's elements.
+  useEffect(() => {
+    initReveal();
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    scanReveal();
   }, [pathname]);
 
   // The admin panel is a standalone tool: no public header, footer, or popups.

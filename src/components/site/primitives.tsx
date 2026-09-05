@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode, HTMLAttributes, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-import { useReveal } from "@/hooks/use-reveal";
 
 const MotionLink = motion.create(Link);
 const SPRING = { type: "spring" as const, stiffness: 420, damping: 20 };
@@ -21,12 +20,10 @@ export function Reveal({
   className?: string;
   as?: "div" | "section" | "li" | "article";
 }) {
-  const { ref, shown } = useReveal<HTMLDivElement>();
   const Tag = As;
   return (
     <Tag
-      ref={ref as never}
-      className={cn("jw-rv", shown && "jw-in", className)}
+      className={cn("jw-rv", className)}
       style={delay ? ({ "--d": `${delay}s` } as CSSProperties) : undefined}
     >
       {children}
@@ -47,13 +44,12 @@ export function SplitHeading({
   className?: string;
   italicFrom?: string;
 }) {
-  const { ref, shown } = useReveal<HTMLHeadingElement>();
   const Tag = (level === 1 ? "h1" : "h2") as "h1" | "h2";
   const words = text.split(" ");
   const italicIndex = italicFrom ? words.indexOf(italicFrom.split(" ")[0] ?? "") : -1;
 
   return (
-    <Tag ref={ref} aria-label={text} className={cn("jw-sh", shown && "jw-in", className)}>
+    <Tag aria-label={text} className={cn("jw-sh", className)}>
       {words.map((word, i) => (
         <span key={`${word}-${i}`} className="inline-block overflow-hidden align-bottom">
           <span
@@ -103,14 +99,11 @@ export function GoldRule({
   className?: string;
   tone?: "gold" | "gold2";
 }) {
-  const { ref, shown } = useReveal<HTMLSpanElement>();
   return (
     <span
-      ref={ref}
       aria-hidden
       className={cn(
         "jw-gr block h-px w-full",
-        shown && "jw-in",
         tone === "gold" ? "bg-gold/60" : "bg-gold2/50",
         className,
       )}
