@@ -60,19 +60,17 @@ function PoojanEnquiry({ subject }: { subject: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 border-t border-gold/25 pt-6">
-      <label className="jw-inv-field">
-        <span>Your name</span>
-        <input name="name" required autoComplete="name" />
-      </label>
-      <label className="jw-inv-field">
-        <span>Email</span>
-        <input name="email" type="email" required autoComplete="email" spellCheck={false} />
-      </label>
-      <label className="jw-inv-field">
-        <span>Your message (optional)</span>
-        <textarea name="message" rows={3} />
-      </label>
+    <form onSubmit={onSubmit} className="mt-6 border-t border-gold/25 pt-5">
+      <div className="grid gap-x-6 sm:grid-cols-2">
+        <label className="jw-inv-field">
+          <span>Your name</span>
+          <input name="name" required autoComplete="name" />
+        </label>
+        <label className="jw-inv-field">
+          <span>Email</span>
+          <input name="email" type="email" required autoComplete="email" spellCheck={false} />
+        </label>
+      </div>
 
       {err ? (
         <p role="alert" className="mt-4 text-[14px] text-kumkum">
@@ -160,7 +158,7 @@ export function PoojanGrid() {
       >
         {item ? (
           <>
-            <dl className="mb-7 grid grid-cols-2 gap-4 border-y border-gold/25 py-5">
+            <dl className="mb-5 grid grid-cols-2 gap-4 border-y border-gold/25 py-4">
               <div>
                 <dt className="flex items-center gap-2 font-[family-name:var(--font-util)] text-[10px] uppercase tracking-[0.2em] text-mist">
                   <Clock3 size={12} aria-hidden />
@@ -177,15 +175,15 @@ export function PoojanGrid() {
               </div>
             </dl>
 
-            {item.body.map((b) => (
-              <p key={b} className="mb-4 text-[15.5px] leading-[1.75] text-ink/88">
-                {b}
-              </p>
-            ))}
+            {/* Just the opening line here — the modal stays short; the fuller
+                description lives on the page, not inside the enquiry card. */}
+            <p className="text-[15px] leading-[1.7] text-ink/88">{item.body[0]}</p>
 
-            <p className="mt-6 border-l-2 border-kumkum pl-4 font-[family-name:var(--font-display)] text-[16px] italic text-maroon">
-              {item.note}
-            </p>
+            {item.note ? (
+              <p className="mt-4 border-l-2 border-kumkum pl-4 font-[family-name:var(--font-display)] text-[15px] italic text-maroon">
+                {item.note}
+              </p>
+            ) : null}
 
             <PoojanEnquiry subject={item.name} />
           </>
