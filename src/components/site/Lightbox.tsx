@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { GalleryItem } from "@/data/site";
 
@@ -36,8 +37,13 @@ export function Lightbox({
   }, [index, items.length, onClose, onMove]);
 
   if (!item) return null;
+  // Rendered through a portal to <body>: the page wrapper (.jw-page) keeps an
+  // identity transform after its enter-animation, which would otherwise make
+  // this `fixed inset-0` overlay size to the whole page instead of the viewport
+  // (the image ended up scrolled far below the fold). The portal lifts it out.
+  if (typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -82,7 +88,8 @@ export function Lightbox({
           <ChevronRight className="h-5 w-5" aria-hidden />
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
