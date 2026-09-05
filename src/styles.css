@@ -2293,6 +2293,36 @@ a.jw-contact-row:hover {
   }
 }
 
+/* ---------- buttons: CSS hover/tap (replaces framer-motion) ----------
+   Lift on hover only where a real hover pointer exists (so it can't stick on
+   touch), press-in on :active (works on touch too). Reduced-motion drops the
+   movement. This keeps framer-motion out of every page's bundle. */
+.jw-btn {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) {
+  .jw-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+  }
+}
+.jw-btn:active {
+  transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  .jw-btn {
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+  .jw-btn:hover,
+  .jw-btn:active {
+    transform: none;
+  }
+}
+
 /* ---------- admin panel ---------- */
 
 .jw-adm-tab {

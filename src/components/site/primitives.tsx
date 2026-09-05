@@ -1,11 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode, HTMLAttributes, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-
-const MotionLink = motion.create(Link);
-const SPRING = { type: "spring" as const, stiffness: 420, damping: 20 };
 
 /* ---------------- Reveal ---------------- */
 
@@ -180,7 +176,7 @@ export function StampFrame({
 /* ---------------- Buttons ---------------- */
 
 const btnBase =
-  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 font-util text-[11.5px] font-semibold uppercase tracking-[0.16em] transition-[background-color,color] duration-[200ms]";
+  "jw-btn inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 font-util text-[11.5px] font-semibold uppercase tracking-[0.16em]";
 
 export function Button({
   children,
@@ -201,7 +197,6 @@ export function Button({
   disabled?: boolean;
   onClick?: () => void;
 }) {
-  const reduce = useReducedMotion();
   const styles = cn(
     btnBase,
     variant === "primary" && "bg-kumkum text-paper hover:bg-[#8f2019]",
@@ -210,35 +205,25 @@ export function Button({
     disabled && "pointer-events-none opacity-60",
     className,
   );
-  const anim =
-    reduce || disabled
-      ? {}
-      : { whileHover: { y: -2, scale: 1.03 }, whileTap: { scale: 0.96 }, transition: SPRING };
 
   if (to) {
     return (
-      <MotionLink to={to} className={styles} {...anim}>
+      <Link to={to} className={styles}>
         {children}
-      </MotionLink>
+      </Link>
     );
   }
   if (href) {
     return (
-      <motion.a href={href} className={styles} {...anim}>
+      <a href={href} className={styles}>
         {children}
-      </motion.a>
+      </a>
     );
   }
   return (
-    <motion.button
-      type={type ?? "button"}
-      className={styles}
-      disabled={disabled}
-      onClick={onClick}
-      {...anim}
-    >
+    <button type={type ?? "button"} className={styles} disabled={disabled} onClick={onClick}>
       {children}
-    </motion.button>
+    </button>
   );
 }
 
@@ -253,19 +238,16 @@ export function ArrowLink({
   tone?: "ink" | "paper";
   className?: string;
 }) {
-  const reduce = useReducedMotion();
-  const anim = reduce ? {} : { whileHover: { x: 4 }, whileTap: { scale: 0.98 }, transition: SPRING };
   return (
-    <MotionLink
+    <Link
       to={to}
       className={cn("jw-arrow group", tone === "paper" && "jw-arrow-paper", className)}
-      {...anim}
     >
       <span className="jw-arrow-label">{children}</span>
       <span aria-hidden className="jw-arrow-disc">
         <ArrowRight className="h-[13px] w-[13px]" aria-hidden />
       </span>
-    </MotionLink>
+    </Link>
   );
 }
 
