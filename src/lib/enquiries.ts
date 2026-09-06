@@ -97,7 +97,14 @@ async function notifyByEmail(data: z.output<typeof EnquiryInput>) {
   try {
     await fetch(`https://formsubmit.co/ajax/${NOTIFY_EMAIL}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        // FormSubmit rejects requests with no site origin ("open through a web
+        // server"); server-side fetch has none, so we set it explicitly.
+        Origin: "https://jainweddingsusa.com",
+        Referer: "https://jainweddingsusa.com/",
+      },
       body: JSON.stringify({
         _subject: `New ${data.source} enquiry — ${data.name}`,
         _template: "table",
