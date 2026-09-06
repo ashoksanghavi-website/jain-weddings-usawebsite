@@ -80,5 +80,40 @@ export const submitEnquiry = createServerFn({ method: "POST" })
          ${data.message ?? null})
     `;
 
+    // Email the enquiry to Ashok via FormSubmit. The row above is the source of
+    // truth (it also shows in /admin), so a notification failure must never fail
+    // the submission — hence the try/catch that swallows any error.
+    await notifyByEmail(data);
+
     return { ok: true as const };
   });
+
+// FormSubmit relays each enquiry to this inbox. The address must be activated
+// once (FormSubmit emails an activation link on the first submission; the owner
+// clicks it). Replies go straight to the enquirer via _replyto.
+const NOTIFY_EMAIL = "asanghavi@aol.com";
+
+async function notifyByEmail(data: z.output<typeof EnquiryInput>) {
+  try {
+    await fetch(`https://formsubmit.co/ajax/${NOTIFY_EMAIL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        _subject: `New ${data.source} enquiry — ${data.name}`,
+        _template: "table",
+        _captcha: "false",
+        _replyto: data.email,
+        Name: data.name,
+        Email: data.email,
+        Phone: data.phone ?? "—",
+        "Wedding date": data.wedding_date ?? "—",
+        City: data.city ?? "—",
+        Ceremony: data.subject ?? "—",
+        Message: data.message ?? "—",
+        Source: data.source,
+      }),
+    });
+  } catch {
+    /* best-effort: the enquiry is already saved to the database */
+  }
+}

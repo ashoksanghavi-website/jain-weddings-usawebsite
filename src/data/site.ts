@@ -19,7 +19,7 @@ export const site = {
   brand: "Jain Weddings USA",
   phone: "1-866-800-4771",
   phoneHref: "tel:+18668004771",
-  email: "info@jainweddingusa.com",
+  email: "asanghavi@aol.com",
   location: "Elkhart, Indiana",
   tagline: "Ordained Minister and Jain Vidhikar, Elkhart, Indiana",
   copyright: "Copyright 2026 Jain Weddings USA",
@@ -493,7 +493,7 @@ export const ceremonyEnquiry = {
   dateLabel: "Wedding date",
   submit: "Send this to Ashok",
   cancel: "Not right now",
-  sent: "Your email app should have opened with the details ready to send. If nothing happened, write to info@jainweddingusa.com or call 1-866-800-4771.",
+  sent: "Thank you — your details are with Ashok, who will reply personally, usually within two days. You are welcome to write to asanghavi@aol.com or call 1-866-800-4771 as well.",
   notes: {
     "01": "Ganesh Pooja is usually held at both homes on the days before the wedding. Tell me the dates and I will confirm what each household needs to have ready.",
     "02": "The Mandap Muhrat grounds the ceremony to the place it is held in. If your venue is outdoors or unusual, mention it and we will plan around it.",
@@ -791,7 +791,7 @@ export const contactPage = {
   privacy: "Your details are used only to reply to you, and are never shared.",
   submit: "Send this to Ashok",
   success: "Thank you. Your message has reached Ashok and he will reply personally.",
-  error: "That did not send. Please call 1-866-800-4771 or email info@jainweddingusa.com.",
+  error: "That did not send. Please call 1-866-800-4771 or email asanghavi@aol.com.",
   fields: {
     name: "Your name",
     email: "Email",
@@ -836,7 +836,7 @@ export const invite = {
   cityLabel: "City",
   submit: "Send this to Ashok",
   dismiss: "Not right now",
-  sent: "Your email app should have opened with the details ready to send. If nothing happened, write to info@jainweddingusa.com or call 1-866-800-4771.",
+  sent: "Thank you — your details are with Ashok, who will reply personally, usually within two days. You are welcome to write to asanghavi@aol.com or call 1-866-800-4771 as well.",
 };
 
 /** Cross links, so no page is a dead end. */
