@@ -22,8 +22,8 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: meta.about.description },
       { property: "og:title", content: meta.about.title },
       { property: "og:description", content: meta.about.description },
-      { property: "og:image", content: seo.aboutPortrait.src },
-      { name: "twitter:image", content: seo.aboutPortrait.src },
+      { property: "og:image", content: seo.aboutSecondary.src },
+      { name: "twitter:image", content: seo.aboutSecondary.src },
     ],
   }),
   component: About,
@@ -39,18 +39,11 @@ function About() {
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="space-y-10 lg:col-span-5">
             <InlayImage
-              src={images.aboutPortrait.src}
-              alt={images.aboutPortrait.alt}
-              width={800}
-              height={1000}
-              curtain
-              className="aspect-[4/5]"
-            />
-            <InlayImage
               src={images.aboutSecondary.src}
               alt={images.aboutSecondary.alt}
               width={800}
               height={1000}
+              curtain
               className="aspect-[4/5]"
             />
             <StampFrame tone="card" hairline>

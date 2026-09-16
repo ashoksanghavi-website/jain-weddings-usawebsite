@@ -52,7 +52,7 @@ function GalleryPage() {
           scroll-snap so it works on every touch device. */}
       <Section tone="paper">
         <PhotoCarousel
-          photos={gallery.map((g) => ({ src: g.thumb, caption: g.caption }))}
+          photos={gallery.map((g) => ({ src: g.full, caption: g.caption }))}
           label="Wedding photographs"
           initialIndex={frontIndex}
           onOpen={(n) => setLightbox(n)}

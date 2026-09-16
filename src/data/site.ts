@@ -127,7 +127,7 @@ export const images = {
     src: `${IMG}/2020/06/asian-wedding-photographer-leicester-226pp_w768_h512.jpg`,
     alt: "Mandap Muhrat, grounding the energies",
   },
-  vidhikar: { src: `${IMG}/2020/06/photo-1.png`, alt: "Ashok Sanghavi, Jain Vidhikar" },
+  vidhikar: { src: `${IMG}/2026/09/ashok-headshot.jpg`, alt: "Ashok Sanghavi, Ordained Minister and Jain Vidhikar" },
   aboutPortrait: {
     src: `${IMG}/2026/09/ashok-headshot.jpg`,
     alt: "Ashok Sanghavi, Ordained Minister and Jain Vidhikar",
