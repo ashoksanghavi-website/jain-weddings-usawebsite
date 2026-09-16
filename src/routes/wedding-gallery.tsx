@@ -13,7 +13,7 @@ import { PhotoCarousel } from "@/components/site/PhotoCarousel";
 import { VideoGallery } from "@/components/site/VideoGallery";
 import { Occasions } from "@/components/site/Occasions";
 import { useSiteContent } from "@/components/site/ContentProvider";
-import { meta, gallery as seoGallery, galleryVideos } from "@/data/site";
+import { meta, gallery as seoGallery } from "@/data/site";
 
 export const Route = createFileRoute("/wedding-gallery")({
   head: () => ({
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/wedding-gallery")({
 });
 
 function GalleryPage() {
-  const { gallery, galleryPage } = useSiteContent();
+  const { gallery, galleryPage, galleryVideos } = useSiteContent();
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   // The carousel opens centred on this photograph (falls back to the first).

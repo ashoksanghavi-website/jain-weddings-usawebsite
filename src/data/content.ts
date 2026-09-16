@@ -20,6 +20,7 @@ export const defaultContent = {
   images: S.images,
   rituals: S.rituals,
   gallery: S.gallery,
+  galleryVideos: S.galleryVideos,
   films: S.films,
   home: S.home,
   testimonials: S.testimonials,

@@ -176,7 +176,7 @@ export const rituals: Ritual[] = [
     sa: "मंगल तिलक",
     body: "The bride's mother marks the groom's forehead and welcomes him in. A small act, and the first time the two households formally accept one another in front of witnesses.",
     meaning: "Receiving Groom",
-    image: `${IMG}/2025/07/IMG_7281-scaled.jpg`,
+    image: `${IMG}/2026/09/mangal-tilak-scaled.jpg`,
   },
   {
     number: "04",
