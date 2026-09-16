@@ -271,8 +271,8 @@ export const gallery: GalleryItem[] = [
     caption: "Mangal Tilak",
   },
   {
-    full: `${IMG}/2020/06/8-3.jpg`,
-    thumb: `${IMG}/2020/06/8-3-400x284.jpg`,
+    full: `${IMG}/2026/09/shruti-rishabh-hd.jpg`,
+    thumb: `${IMG}/2026/09/shruti-rishabh-hd-400x284.jpg`,
     caption: "Shruti and Rishabh",
   },
   {
@@ -311,8 +311,8 @@ export const gallery: GalleryItem[] = [
     caption: "Var Aagaman",
   },
   {
-    full: `${IMG}/2020/06/Skype_Picture_2020_06_15T16_29_44_562Z.jpeg`,
-    thumb: `${IMG}/2020/06/Skype_Picture_2020_06_15T16_29_44_562Z.jpeg`,
+    full: `${IMG}/2026/09/ceremony-moments-hd.jpg`,
+    thumb: `${IMG}/2026/09/ceremony-moments-hd-400x284.jpg`,
     caption: "Ceremony moments",
   },
 ];
