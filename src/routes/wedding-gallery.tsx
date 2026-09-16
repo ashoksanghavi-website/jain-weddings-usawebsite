@@ -10,9 +10,10 @@ import {
 } from "@/components/site/primitives";
 import Lightbox from "@/components/site/Lightbox";
 import { PhotoCarousel } from "@/components/site/PhotoCarousel";
+import { VideoGallery } from "@/components/site/VideoGallery";
 import { Occasions } from "@/components/site/Occasions";
 import { useSiteContent } from "@/components/site/ContentProvider";
-import { meta, gallery as seoGallery } from "@/data/site";
+import { meta, gallery as seoGallery, galleryVideos } from "@/data/site";
 
 export const Route = createFileRoute("/wedding-gallery")({
   head: () => ({
@@ -95,6 +96,19 @@ function GalleryPage() {
       </Section>
 
       <Section tone="paper">
+        <div className="mx-auto max-w-2xl text-center">
+          <Kicker>Moments in motion</Kicker>
+          <div className="mt-5">
+            <SplitHeading text="Films from the ceremonies" level={2} />
+          </div>
+          <GoldRule className="mx-auto mt-6 max-w-[160px]" />
+        </div>
+        <div className="mt-12">
+          <VideoGallery videos={galleryVideos} label="Wedding films" />
+        </div>
+      </Section>
+
+      <Section tone="tint">
         <Occasions />
       </Section>
 

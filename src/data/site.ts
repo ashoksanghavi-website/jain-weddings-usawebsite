@@ -129,8 +129,12 @@ export const images = {
   },
   vidhikar: { src: `${IMG}/2020/06/photo-1.png`, alt: "Ashok Sanghavi, Jain Vidhikar" },
   aboutPortrait: {
-    src: `${IMG}/2020/06/JW_Ashok_Sanghavi_Vidhikar.png`,
-    alt: "Ashok Sanghavi, Ordained Minister",
+    src: `${IMG}/2026/09/ashok-headshot.jpg`,
+    alt: "Ashok Sanghavi, Ordained Minister and Jain Vidhikar",
+  },
+  aboutSecondary: {
+    src: `${IMG}/2026/09/about-7638.jpg`,
+    alt: "Ashok Sanghavi officiating a destination Jain wedding",
   },
   certificate: { src: `${IMG}/2020/06/ordination-certificate.jpg`, alt: "Ordination certificate" },
   aboutMission: { src: `${IMG}/2020/06/JW_aboutusimg4-1.jpg`, alt: "A Jain wedding ceremony" },
@@ -262,8 +266,8 @@ export const gallery: GalleryItem[] = [
     caption: "Pranav and Priya",
   },
   {
-    full: `${IMG}/2025/07/IMG_7281-scaled.jpg`,
-    thumb: `${IMG}/2025/07/IMG_7281-400x284.jpg`,
+    full: `${IMG}/2026/09/mangal-tilak-scaled.jpg`,
+    thumb: `${IMG}/2026/09/mangal-tilak-400x284.jpg`,
     caption: "Mangal Tilak",
   },
   {
@@ -297,8 +301,8 @@ export const gallery: GalleryItem[] = [
     caption: "Jain rituals and customs",
   },
   {
-    full: `${IMG}/revslider/slaido_96/e7d6312076c96c1fc8a1207f976e3591-scaled.jpg`,
-    thumb: `${IMG}/revslider/slaido_96/e7d6312076c96c1fc8a1207f976e3591-scaled.jpg`,
+    full: `${IMG}/2026/09/traditions-651.jpg`,
+    thumb: `${IMG}/2026/09/traditions-651-400x284.jpg`,
     caption: "Traditions and customs",
   },
   {
@@ -316,6 +320,18 @@ export const gallery: GalleryItem[] = [
 export const films = [
   { src: `${IMG}/2022/01/VIDEO-2021-11-20-20-31-39-2.mp4`, title: "A ceremony in full" },
   { src: `${IMG}/2022/01/VIDEO-2022-01-16-17-07-52-1.mp4`, title: "Blessings and vows" },
+];
+
+export type GalleryVideo = { src: string; poster: string; caption: string };
+
+// Six ceremony films for the gallery, shown as two rows of three.
+export const galleryVideos: GalleryVideo[] = [
+  { src: `${IMG}/2026/09/g1.mp4`, poster: `${IMG}/2026/09/g1.jpg`, caption: "Ceremony moments" },
+  { src: `${IMG}/2026/09/g2.mp4`, poster: `${IMG}/2026/09/g2.jpg`, caption: "At the mandap" },
+  { src: `${IMG}/2026/09/g3.mp4`, poster: `${IMG}/2026/09/g3.jpg`, caption: "The ceremony" },
+  { src: `${IMG}/2026/09/g4.mp4`, poster: `${IMG}/2026/09/g4.jpg`, caption: "Rituals and blessings" },
+  { src: `${IMG}/2026/09/g5.mp4`, poster: `${IMG}/2026/09/g5.jpg`, caption: "Vows and celebration" },
+  { src: `${IMG}/2026/09/g6.mp4`, poster: `${IMG}/2026/09/g6.jpg`, caption: "A wedding in full" },
 ];
 
 export const home = {

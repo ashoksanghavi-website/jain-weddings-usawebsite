@@ -46,6 +46,13 @@ function About() {
               curtain
               className="aspect-[4/5]"
             />
+            <InlayImage
+              src={images.aboutSecondary.src}
+              alt={images.aboutSecondary.alt}
+              width={800}
+              height={1000}
+              className="aspect-[4/5]"
+            />
             <StampFrame tone="card" hairline>
               <img
                 src={images.certificate.src}
