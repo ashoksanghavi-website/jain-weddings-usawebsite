@@ -575,7 +575,7 @@ export const galleryPage = {
       place: "New Jersey",
       season: "Summer",
       note: "The ceremony that produced the first note on this page. Parents flown in from three countries, and every one of them followed it.",
-      image: `${IMG}/2020/06/8-3.jpg`,
+      image: `${IMG}/2026/09/shruti-rishabh-hd.jpg`,
     },
   ],
   mosaicHeading: "Every photograph",
