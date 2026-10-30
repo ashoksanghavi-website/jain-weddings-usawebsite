@@ -205,20 +205,6 @@ export function Footer() {
               {site.signatory}
             </p>
           </div>
-
-          <p className="mt-7 text-center text-[10.5px] tracking-[0.18em] text-paper/40">
-            <span aria-hidden className="mx-auto mb-4 block h-px w-10 bg-gold2/25" />
-            Designed by{" "}
-            <a
-              href="https://www.automatedcodes.com"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-gold2/85 underline-offset-4 transition-colors hover:text-gold2 hover:underline"
-            >
-              Automated Codes
-              <span className="sr-only">, opens in a new window</span>
-            </a>
-          </p>
         </div>
       </footer>
     </>
