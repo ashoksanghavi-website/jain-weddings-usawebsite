@@ -1,9 +1,12 @@
 # Notes for agents working on this repo
 
-- **Jain, not Vedic.** The ceremony turns on **Mangal Phera**, and the rites are
-  the twelve on the rituals page (Var Aagaman → Akhand Saubhagyavati). Never add
-  "the seven steps" / saptapadi. Testimonials are real people — do not invent or
-  rewrite them.
+- **Jain, not Vedic.** The ceremony turns on **Mangal Phera**. The rites are the
+  thirteen on the rituals page, in this order set by Ashok himself: Var Agaman,
+  Mangal Tilak, Antar Pat, Jay Mala, Hasta Melap, Kanya Aadan, Granthi Bandhan,
+  Ring Ceremony, Kansar, Akhand Saubhagyavati, Mangal Phera, Sapta Padi, Vidai.
+  (Sapta Padi IS included — the client asked for it directly on 2026-11-25, so
+  the earlier "never add saptapadi" rule no longer applies.) Testimonials are
+  real people — do not invent or rewrite them.
 - **Copy lives in one file.** All copy, image URLs and lists are in
   `src/data/site.ts`. Do not hardcode copy in components.
 - **Every Devanagari string carries `lang="sa"`** — it is both the font hook and

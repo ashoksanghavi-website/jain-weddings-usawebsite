@@ -19,7 +19,7 @@ import { CeremonyEnquiry } from "@/components/site/CeremonyEnquiry";
 import { Pathways } from "@/components/site/Pathways";
 import { meta, images as seo } from "@/data/site";
 import { useSiteContent } from "@/components/site/ContentProvider";
-import { HeroVideo } from "@/components/site/HeroVideo";
+import { HeroSlideshow } from "@/components/site/HeroSlideshow";
 import { Phone } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -60,7 +60,7 @@ function Hero() {
 
   return (
     <section className="relative isolate flex min-h-[560px] items-end overflow-hidden bg-maroon2 lg:min-h-[600px]">
-      <HeroVideo />
+      <HeroSlideshow />
 
       {/* the printed border of an invitation, over the footage */}
       <span

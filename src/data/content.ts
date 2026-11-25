@@ -11,6 +11,7 @@ export const defaultContent = {
   IMG: S.IMG,
   LOGO: S.LOGO,
   heroVideo: S.heroVideo,
+  heroSlides: S.heroSlides,
   site: S.site,
   socials: S.socials,
   routes: S.routes,
