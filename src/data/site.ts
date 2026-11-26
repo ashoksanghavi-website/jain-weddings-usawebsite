@@ -208,7 +208,7 @@ export const rituals: Ritual[] = [
     sa: "ग्रंथि बंधन",
     body: "The ends of their garments are tied together. From this point the two of them move as one, physically, in front of everybody, and the knot is not undone for the rest of the ceremony.",
     meaning: "Tying the Knot",
-    image: `${IMG}/2020/06/m-fera.jpg`,
+    image: `${IMG}/2026/11/granthi-bandhan.jpg`,
   },
   {
     number: "08",
@@ -216,7 +216,7 @@ export const rituals: Ritual[] = [
     sa: "अंगूठी",
     body: "The couple exchange rings — a quiet, modern moment inside an old ceremony. A small circle given and received, worn afterwards on every ordinary day as a reminder of this one.",
     meaning: "Exchange of Rings",
-    image: `${IMG}/2026/09/ceremony-moments-hd.jpg`,
+    image: `${IMG}/2026/11/ring-ceremony.jpg`,
   },
   {
     number: "09",
