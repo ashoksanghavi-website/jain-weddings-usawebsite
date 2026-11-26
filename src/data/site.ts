@@ -176,7 +176,7 @@ export const rituals: Ritual[] = [
     sa: "अंतरपट",
     body: "A cloth is held between the bride and groom, and then lowered. They see each other for the first time as two people about to be married rather than two people who are not. Everyone in the room feels the moment change.",
     meaning: "The Curtain Between",
-    image: `${IMG}/2026/09/traditions-651.jpg`,
+    image: `${IMG}/2026/11/antar-pat.jpg`,
   },
   {
     number: "04",
@@ -256,7 +256,7 @@ export const rituals: Ritual[] = [
     sa: "विदाई",
     body: "The farewell. The bride leaves her parents' home with their blessing, and the two families — now one — send the couple forward into the life they have just promised each other.",
     meaning: "The Farewell",
-    image: `${IMG}/2026/09/shruti-rishabh-hd.jpg`,
+    image: `${IMG}/2026/11/vidai.jpg`,
   },
 ];
 
@@ -267,6 +267,7 @@ export type HeroSlide = { src: string; alt: string };
 export const heroSlides: HeroSlide[] = [
   { src: `${IMG}/2025/10/IMG_8619-scaled.jpg`, alt: "The groom arrives in the baraat" },
   { src: `${IMG}/2025/10/IMG_5822-scaled.jpg`, alt: "The bride and groom exchange garlands" },
+  { src: `${IMG}/2026/11/mandap-ceremony.jpg`, alt: "The couple at the mandap as the sacred fire rises" },
   { src: `${IMG}/2025/10/IMG_8650-scaled.jpg`, alt: "The couple circles the sacred fire" },
   { src: `${IMG}/2026/09/shruti-rishabh-hd.jpg`, alt: "A Jain wedding ceremony in a garden" },
   { src: `${IMG}/2026/09/ceremony-moments-hd.jpg`, alt: "A quiet moment between the couple" },
